@@ -295,7 +295,7 @@ int main(int argc, char* argv[])
             }
             if ((s == '\t') || (s == ' ') || s == ':') {    //If a separation character is encountered
                 strcpy(Options.IPAddress, filetext);        //Copy the text read to the IP Address
-                for(i=0;i<26;i++){filetext[i] = '\0';}      //and clear the file text string
+                for(i=0;i<25;i++){filetext[i] = '\0';}      //and clear the file text string
                 continue;
             }
             if (s == '\n'){                                 //If a newline character is encountered
@@ -306,7 +306,7 @@ int main(int argc, char* argv[])
                 {
                     Options.Door = 80;                      //Otherwise the default port 80 is copied
                 }
-                for(i=0;i<26;i++){filetext[i] = '\0';}      //And the string is cleared
+                for(i=0;i<25;i++){filetext[i] = '\0';}      //And the string is cleared
                 Proxy test(Options.IPAddress, Options.Door);//The Proxy object is made, in the scope of the if block
                 if(test.CheckProxy(&Options)) {             //Runs the typical check, and we're off
                     if (Options.Verbosity) cout << "[i] Proxy active and running!" << endl;
