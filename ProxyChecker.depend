@@ -1,0 +1,16 @@
+# depslib dependency file v1.0
+1470518949 source:/home/bladedemon/Projects/ProxyChecker/main.cpp
+	<iostream>
+	<sys/socket.h>
+	<sys/types.h>
+	<netinet/tcp.h>
+	<cstring>
+	<cstdio>
+	<netinet/in.h>
+	<netdb.h>
+	<unistd.h>
+	<cstdlib>
+	<cerrno>
+	<arpa/inet.h>
+	<ctime>
+
