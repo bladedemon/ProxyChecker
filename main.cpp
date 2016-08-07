@@ -186,6 +186,26 @@ public:                                                 //Here are the typical m
     }
 };
 
+void outtofile (char* ipaddress, int port, char* outfile) { //This outputs to a file the ip address and port
+    //in the format of IPAddress:Port
+    //Later I will add compatibility with the proxychains config file format
+    FILE* outfilep;
+    outfilep = fopen(outfile,"a");             //The file is opened in append mode to avoid nulling previous entries
+    fprintf(outfilep,"%s:%d\n",ipaddress,port);
+    fclose(outfilep);
+    return;
+}
+
+bool checkfileexists(char* pathtofile){        //Check if a file exists and can be opened for read/write
+    FILE* filep;
+    filep = fopen(pathtofile,"a");
+    if (filep == NULL){
+        if (Options.Verbosity){cout << "[!] Error opening file " << pathtofile << endl;}
+        return false;
+    }
+    fclose(filep);
+    return true;
+}
 
 int main(int argc, char* argv[])
 {
@@ -245,16 +265,7 @@ int main(int argc, char* argv[])
         cout << "Enter proxycheck --help for all test options" << endl;
         return 3;
     }
-/*
-    //Some debugging debris
-    cout << "Out of the options\n";
-    cout << "Options\nFile path :" << Options.FileSwitch << " " << Options.FilePath << endl;
-    cout << "Time " << Options.TimeoutSwitch << " " << Options.Timeout.tv_sec << endl;
-    cout << "Output " << Options.OutputSwitch << " " << Options.OutputPath << endl;
-    cout << "Check " << Options.CheckSiteSwitch << " " << Options.CheckSite << endl;
-    cout << "IP addr " << Options.IPAddress << " " << Options.Door << endl;
-*/
-
+    //Constructing the string to send...
     strcpy(Text, "GET http://");
     strcat(Text, Options.CheckSite);
     strcat(Text, "/ HTTP/1.1\n");
@@ -311,7 +322,9 @@ int main(int argc, char* argv[])
                 if(test.CheckProxy(&Options)) {             //Runs the typical check, and we're off
                     if (Options.Verbosity) cout << "[i] Proxy active and running!" << endl;
                     if (Options.OutputSwitch) {
-                        cout << "Output to file not yet supported." << endl;
+                        if (checkfileexists(Options.OutputPath)){
+                            outtofile(Options.IPAddress, Options.Door, Options.OutputPath);
+                        }
                         //Write to file the output of the check.
                     }
                 }
@@ -326,13 +339,12 @@ int main(int argc, char* argv[])
     if(test.CheckProxy(&Options)) {
         if (Options.Verbosity) cout << "[i] Proxy active and running!" << endl;
         if (Options.OutputSwitch) {
-            cout << "Output to file not yet supported." << endl;
+            if (checkfileexists(Options.OutputPath)){
+                outtofile(Options.IPAddress, Options.Door, Options.OutputPath);
+            }
             //Write to file the output of the check.
             return 0;
         }
     }
-    //test.ShowProxy();
-
-
     return 0;
 }
